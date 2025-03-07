@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>fairywrld</title>
+        <link rel="shortcut icon" href="fairy.png">
+        <meta charset="UTF-8">
+        <style>
+            #background {
+                position: fixed;
+                min-width: 100%;
+                min-height: 100%;
+                right: 0;
+                top: 0;
+                opacity: 0.5;
+            }
+
+            #fairy1 {
+                position: absolute;
+                top: 5vh;
+                left: 5vw;
+                width: 12vw;
+            }
+
+            #flower4-container {
+                position: fixed;
+                bottom: 0vh;
+                right: 5vw;
+                width: 20vw;
+                z-index: 1;
+            }
+
+            #flower4 {
+                width: 100%;
+                transition: transform 0.3s ease-out;
+            }
+
+            #flower4:hover {
+                transform: scale(1.3);
+            }
+
+            #home-text {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                color: black;
+                font-size: 16px;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                font-family: monospace;
+                font-weight: 600;
+                z-index: 10;
+            }
+
+            #flower4-container:hover #home-text {
+                opacity: 1;
+            }
+
+            .name-container {
+                position: fixed;
+                top: 120px;
+                right: 50px;
+                z-index: 4;
+                font-family: monospace;
+                font-size: 16px;
+                color: black;
+            }
+
+            #fname {
+                font-size: 16px;
+                border: 1px solid black;
+                border-radius: 5px;
+            }
+
+            .quiz-container {
+                position: fixed;
+                top: 30vh;
+                left: 55%;
+                transform: translateX(-50%);
+                font-family: monospace;
+                font-size: 16px;
+                padding: 20px;
+                border-radius: 10px;
+                z-index: 5;
+                width: 70%;
+            }
+
+            .quiz-container h3 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+
+            .quiz-container input[type="radio"] {
+                margin-right: 10px;
+            }
+
+            .quiz-container input[type="submit"] {
+                margin-top: 15px;
+                background-color: pink;
+                color: white;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 12px;
+                font-family: monospace;
+                width: 150px;
+                transition: 0.3s ease-in-out;
+            }
+
+            .quiz-container input[type="submit"]:hover {
+                background-color: lightcoral;
+            }
+
+            #response-message {
+                font-family: monospace;
+                font-size: 20px;
+                margin-top: 20px;
+                color: #3774dc;
+                text-align: center;
+                display: none;
+                width: 80%;
+                
+            }
+        </style> 
+    </head>
+    <body>
+        <img id="background" src="fairybackground.gif" alt="Animated gif of a rainbow sparking with a pink glow. Behind the rainbow is a snow-covered forest under the blue sky.">
+        
+        <a href="index.html">
+            <div id="flower4-container">
+                <span id="home-text">home</span>
+                <img id="flower4" src="flower4.png" alt="Light pink, vertical stalk of flowers, each with pink edges and a white center. When hovered over, it grows slightly larger and the word 'home' appears, making it into a home button.">
+            </div>
+        </a>
+
+        <img id="fairy1" src="fairy1.png" alt="A young girl with black hair wearing a pink flower for a hat and another pink flower for her dress. She is also wearing bright green leggings and pink heels. She is standing playfully, slightly turned to the left.">
+
+        <div class="quiz-container">
+            <h3>do you solemnly swear to use your fairy powers for good and only good?</h3>
+            <form id="quizForm">
+                <input type="radio" id="option1" name="question" value="yes">
+                <label for="option1">yes</label><br>
+
+                <input type="radio" id="option2" name="question" value="no">
+                <label for="option2">no</label><br>
+
+                <input type="radio" id="option3" name="question" value="maybe">
+                <label for="option3">maybe hehe</label><br>
+
+                <input type="radio" id="option4" name="question" value="not_a_fairy">
+                <label for="option4">i'm not a fairy???</label><br>
+
+                <br>
+                <input type="submit" value="make me a fairy!">
+            </form>
+
+            <!-- The response message will show up below the form after submission -->
+            <div id="response-message">
+                <p>✨ you are now a fairy! ✨</p>
+                <p>welcome to the magical world! ur first task: make a daisy chain. if ur allergic, sorry you lost your fairy status :( </p>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('quizForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                document.getElementById('response-message').style.display = 'block';
+            });
+        </script>
+    </body>
+</html>
