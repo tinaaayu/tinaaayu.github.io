@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pearl</title>
+    <link rel="shortcut icon" href="pearl.png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        #background {
+            position: fixed;
+            min-width: 100%;
+            min-height: 100%;
+            left: 0;
+            top: 0;
+            z-index: 0;
+            filter: brightness(60%)
+        }
+        body {
+            text-align: center;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        #camera {
+            position: fixed;
+            top: 25vh;
+            left: 30vw;
+            width: 40vw;
+            height: 40vw;
+            border-radius: 50%;
+            overflow: hidden;
+            z-index: 5;
+            background-color: black;
+        }
+
+        #mirrored-cursor {
+            width: 20px;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            position: absolute;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        #textbox-container {
+            position: fixed;
+            top: 10vh;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 6;
+        }
+        #textbox {
+            font-size: 20px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            padding: 10px;
+            width: 30vw;
+            text-align: center;
+            border-radius: 5px;
+        }
+        #output {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 35px;
+            color: rgba(0, 0, 0, 0.477);
+            display: none; 
+            text-align: center;
+            line-height: 1.5; 
+            z-index: 7;
+            white-space: normal; 
+            overflow: hidden; 
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+    </style>
+</head>
+<body>
+    <img id="background" src="background.jpg">
+    <div id="camera"></div> 
+    <div id="textbox-container">
+        <input type="text" id="textbox" placeholder="Who are you?">
+    </div>
+    <div id="output"></div>
+    <canvas id="pixelCanvas"></canvas> 
+    
+    <script>
+        document.body.addEventListener('mousemove', function(e) {
+            const screenWidth = window.innerWidth;  
+            const screenHeight = window.innerHeight; 
+            const mouseX = e.clientX; 
+            const mouseY = e.clientY;
+
+            let mirroredCursor = document.getElementById('mirrored-cursor');
+
+            if (!mirroredCursor) {
+                mirroredCursor = document.createElement('div');
+                mirroredCursor.id = 'mirrored-cursor';
+                document.body.appendChild(mirroredCursor);
+            }
+
+            const mirroredX = screenWidth - mouseX;
+            const mirroredY = screenHeight - mouseY;
+
+            mirroredCursor.style.left = `${mirroredX}px`;
+            mirroredCursor.style.top = `${mirroredY}px`;
+        });
+        const louis = document.getElementById("camera");
+        const textbox = document.getElementById("textbox");
+        const output = document.getElementById("output");
+        const canvas = document.getElementById("pixelCanvas");
+        const context = canvas.getContext("2d");
+
+        let typingInterval;
+        let typingIndex = 0;
+        let typingTimeout;
+
+        const video = document.createElement('video');
+        video.autoplay = true;
+        louis.appendChild(video);
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(error => {
+                console.error('Error accessing webcam: ', error);
+            });
+
+
+        function typeText(text, element, speed) {
+            typingIndex = 0;
+            element.textContent = '';
+            clearInterval(typingInterval);
+            typingInterval = setInterval(() => {
+                element.textContent += text.charAt(typingIndex);
+                typingIndex++;
+                if (typingIndex >= text.length) {
+                    clearInterval(typingInterval);
+                }
+            }, speed);
+        }
+
+        function debounceTyping(callback, delay) {
+            clearTimeout(typingTimeout); 
+            typingTimeout = setTimeout(callback, delay); 
+        }
+
+        textbox.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                let inputValue = textbox.value.trim();
+
+                if (inputValue.length > 0) {
+                    output.style.display = "block"; 
+                    debounceTyping(() => {
+                        const repeatedText = "Are you sure? You look tired. ".repeat(100);
+                        typeText(repeatedText, output, 20);
+                    }, 500);
+                } else {
+                    output.textContent = "";
+                    output.style.display = "none";
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
