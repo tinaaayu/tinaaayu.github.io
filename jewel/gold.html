@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gold</title>
+    <link rel="shortcut icon" href="sun.png">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            cursor: none;
+            background-image: url('gold.jpg');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        #mirrored-cursor {
+            width: 20px;
+            height: 20px;
+            background-color: rgba(0, 0, 0, 0.357);
+            border-radius: 50%;
+            position: absolute;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        #camera {
+            position: fixed;
+            overflow: hidden;
+            z-index: -10;
+            width: 1vw;
+            left: 50vw;
+        }
+
+        .quiz-container {
+            position: absolute;
+            top: 40vh;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 2;
+            width: 18vw;;
+            text-align: center;
+        }
+
+        .question {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .answer-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .answer-buttons button {
+            padding: 10px;
+            font-size: 14px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            cursor: pointer;
+            background-color: rgba(90, 90, 90, 0.686);
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .answer-buttons button:hover {
+            background-color:rgba(90, 90, 90, 0.686);
+        }
+
+        #quiz-result {
+            display: none;
+            font-size: 24px;
+            margin-top: 50px;
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="camera">
+        <video id="webcam" autoplay></video>
+    </div>
+
+    <!-- Personality Quiz Section -->
+    <div id="quiz" class="quiz-container">
+        <div id="question-container" class="question">
+            <p>i always...</p>
+        </div>
+        <div class="answer-buttons">
+            <button onclick="answer('A')">buy new things even when i don't need it.</button>
+            <button onclick="answer('B')">post most moments of my life online.</button>
+            <button onclick="answer('C')">buy more food than i can eat.</button>
+            <button onclick="answer('D')">save my best looks for other people.</button>
+        </div>
+        <div id="quiz-result"></div>
+    </div>
+
+    <script>
+        // Webcam stream setup
+        const webcam = document.getElementById('webcam');
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                webcam.srcObject = stream;
+            })
+            .catch(error => {
+                console.error('Error accessing webcam: ', error);
+            });
+
+        // Mirrored cursor setup
+        document.body.addEventListener('mousemove', function(e) {
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            let mirroredCursor = document.getElementById('mirrored-cursor');
+
+            if (!mirroredCursor) {
+                mirroredCursor = document.createElement('div');
+                mirroredCursor.id = 'mirrored-cursor';
+                document.body.appendChild(mirroredCursor);
+            }
+
+            const mirroredX = screenWidth - mouseX;
+            const mirroredY = screenHeight - mouseY;
+
+            mirroredCursor.style.left = `${mirroredX}px`;
+            mirroredCursor.style.top = `${mirroredY}px`;
+        });
+
+        // Quiz functionality
+        let currentQuestionIndex = 0;
+        const questions = [
+            {
+                question: 'who are you?',
+                options: [
+                    { text: 'a woman.', value: 'A' },
+                    { text: 'a man.', value: 'B' },
+                    { text: 'neither.', value: 'C' },
+                    { text: 'both.', value: 'D' }
+                ]
+            },
+            {
+                question: 'who are you?',
+                options: [
+                    { text: 'a doer.', value: 'A' },
+                    { text: 'a watcher.', value: 'B' },
+                    { text: 'a listener.', value: 'C' },
+                    { text: 'a leader.', value: 'D' }
+                ]
+            },
+            {
+                question: 'who are you...',
+                options: [
+                    { text: 'a disappointment.', value: 'A' },
+                    { text: 'a bully.', value: 'B' },
+                    { text: 'a liar.', value: 'C' },
+                    { text: 'a thief.', value: 'D' }
+                ]
+            }
+        ];
+
+        const score = {
+            A: 0,
+            B: 0,
+            C: 0,
+            D: 0
+        };
+
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            const questionContainer = document.getElementById('question-container');
+            const answerButtons = document.querySelector('.answer-buttons');
+
+            questionContainer.textContent = currentQuestion.question;
+            answerButtons.innerHTML = currentQuestion.options.map(option => `
+                <button onclick="answer('${option.value}')">${option.text}</button>
+            `).join('');
+        }
+
+        function answer(choice) {
+            score[choice] += 1;
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            let highestScore = Math.max(score.A, score.B, score.C, score.D);
+            let personalityType;
+
+            if (highestScore === score.A) {
+                personalityType = 'only you have the answer';
+            } else if (highestScore === score.B) {
+                personalityType = 'only you have the answer';
+            } else if (highestScore === score.C) {
+                personalityType = 'only you have the answer';
+            } else {
+                personalityType = 'only you have the answer';
+            }
+
+            const quizResult = document.getElementById('quiz-result');
+            quizResult.textContent = `only you have the answer`;
+            quizResult.style.display = 'block';
+
+            document.getElementById('question-container').style.display = 'none';
+            document.querySelector('.answer-buttons').style.display = 'none';
+        }
+
+        // Initialize the first question
+        loadQuestion();
+    </script>
+</body>
+</html>
