@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>subway thoughts</title>
+  <link rel="shorcut icon" href="icon.jpg">
+  <style>         
+    body {
+      top: 0vh;
+      left: 0vw;
+      font-family: 'helvetica neue', sans-serif;
+      background-color: black;
+      z-index: 1;
+      color: white;
+      padding: 40px;
+    }
+
+    #background {
+      position: fixed;
+      bottom: 0vh;
+      right: 0vw;
+      height: 70vh;
+      filter: invert(100%);
+      animation: slideIn 3s ease-out forwards;
+      animation-delay: 28s;
+      transform: translateX(100%);
+      z-index: -1;
+    }
+
+    @keyframes slideIn {
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    #typewriter {
+      font-size: 1.6rem;
+      line-height: 1.2;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <a href="seats.html">
+    <img id="background" src="subway.png">
+  </a>
+
+  <div>
+    <p id="typewriter"></p>
+  </div>
+  
+  <script>
+    const thoughts = [
+      "did i text my mom back?",
+      "i think i did.",
+      "i'm like 80% sure i did.",
+      "",
+      "maybe i should've worn something else.",
+      "this jacket clings weird at the shoulders.",
+      "do i look like i'm trying too hard?",
+      "or not enough."
+    ];
+  
+    const typewriterContainer = document.getElementById("typewriter");
+    let thoughtIndex = 0;
+    let charIndex = 0;
+    let currentLine = "";
+  
+    function typeNextChar() {
+      const currentThought = thoughts[thoughtIndex];
+  
+      if (charIndex < currentThought.length) {
+        currentLine += currentThought.charAt(charIndex);
+        typewriterContainer.lastChild.textContent = currentLine;
+        charIndex++;
+        setTimeout(typeNextChar, 90);
+      } else {
+        thoughtIndex++;
+        charIndex = 0;
+        currentLine = "";
+  
+        if (thoughtIndex < thoughts.length) {
+          const nextP = document.createElement("p");
+          typewriterContainer.appendChild(nextP);
+  
+          const nextThought = thoughts[thoughtIndex];
+          const pauseDuration = (nextThought === "maybe i should've worn something else.") ? 2000 : 600;
+  
+          setTimeout(typeNextChar, pauseDuration);
+        }
+      }
+    }
+  
+    window.onload = () => {
+      const firstP = document.createElement("p");
+      typewriterContainer.appendChild(firstP);
+      setTimeout(typeNextChar, 800);
+    };
+  </script>
+</body>
+</html>
