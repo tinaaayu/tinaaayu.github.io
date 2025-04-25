@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>subway thoughts</title>
+  <link rel="shorcut icon" href="icon.jpg">
+  <style>         
+    body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: black;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+      color: white;
+      padding: 40px;
+      top: 5vh;
+      left: 50vw;
+      font-size: 1rem;
+    }
+
+    #background {
+      position: fixed;
+      z-index: -2;
+      top: 10vh;
+      left: 0vw;
+      width: 55vw;
+      object-fit: cover;
+      filter: invert(100%);
+    }
+
+    .typewriter {
+      position: absolute;
+      width: 100%;
+      color: white;
+    }
+
+    .reflection {
+      transform: scaleY(-1); /* Mirror effect */
+      filter: blur(1px); /* Add blur for water effect */
+      transform-origin: top;
+      position: absolute;
+      width: 100%;
+    }
+
+    #typewriter {
+      top: 10%;
+      opacity: 1;
+    }
+
+    #reflection {
+      top: 90vh; /* Position the reflection below the text */
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <a id="delayed-link" href="pov.html">
+    <img id="background" src="mirror.png">
+  </a>
+
+  <div class="typewriter" id="typewriter"></div>
+  <div class="typewriter reflection" id="reflection"></div>
+
+  <script>
+    const thoughts = [
+        "it's never enough.",
+        "i finish... then...",
+        "what's missing?",
+        "i can feel it.",
+        "i know it's there.",
+        "i can't see it all.",
+        "but it's there. it always is.",
+        "",
+        "good enough is for those who amount to nothing.",
+        "i need perfect.",
+        "if it's not perfection, it's nothing.",
+        "i'm nothing.",
+        "",
+        "everyone keeps telling me to let it go,",
+        "but how can i??",
+        "i want to matter.",
+        "i want to be remembered.",
+        "i want to be better."
+    ];
+
+    function typeText(typewriterContainer, reflectionContainer) {
+      let thoughtIndex = 0;
+      let charIndex = 0;
+      let currentLine = "";
+
+      function typeNextChar() {
+        const currentThought = thoughts[thoughtIndex];
+
+        if (charIndex < currentThought.length) {
+          currentLine += currentThought.charAt(charIndex);
+          typewriterContainer.lastChild.textContent = currentLine;
+          reflectionContainer.lastChild.textContent = currentLine; // Mirror the text
+          charIndex++;
+          setTimeout(typeNextChar, 90);
+        } else {
+          thoughtIndex++;
+          charIndex = 0;
+          currentLine = "";
+
+          if (thoughtIndex < thoughts.length) {
+            const nextP = document.createElement("p");
+            typewriterContainer.appendChild(nextP);
+
+            // Create reflection text
+            const reflectionP = document.createElement("p");
+            reflectionContainer.appendChild(reflectionP);
+
+            const pauseDuration = (currentThought === "she probably aces every class.") ? 2000 : 600;
+            setTimeout(typeNextChar, pauseDuration);
+          }
+        }
+      }
+
+      const firstP = document.createElement("p");
+      typewriterContainer.appendChild(firstP);
+
+      // Initialize first reflection paragraph
+      const firstReflectionP = document.createElement("p");
+      reflectionContainer.appendChild(firstReflectionP);
+
+      setTimeout(typeNextChar, 800);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      // Reset the typewriter containers
+      document.getElementById("typewriter").innerHTML = "";
+      document.getElementById("reflection").innerHTML = "";
+
+      // Start typing in the typewriter container and mirror it in the reflection
+      typeText(document.getElementById("typewriter"), document.getElementById("reflection"));
+    });
+
+    const link = document.getElementById("delayed-link");
+
+// Disable clicks initially
+link.style.pointerEvents = "none";
+link.style.opacity = "0.5"; // optional: make it look disabled
+
+// Re-enable after 10 seconds
+setTimeout(() => {
+  link.style.pointerEvents = "auto";
+  link.style.opacity = "1"; // optional: return to normal
+}, 45000);
+  </script>
+</body>
+</html>

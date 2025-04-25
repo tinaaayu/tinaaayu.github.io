@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>subway thoughts</title>
+  <link rel="shorcut icon" href="icon.jpg">
+  <style>         
+    body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: rgb(255, 255, 255);
+      margin: 0;
+      position: relative;
+      z-index: 1;
+      color: black;
+      padding: 40px;
+      top: 25vh;
+      left: -30vw;
+      text-align: center;
+    }
+
+    #background {
+      position: fixed;
+      object-fit: cover;
+      z-index: -2;
+      top: 0vh;
+      right: 0vw;
+      width: 45vw;
+    }
+
+    #typewriter {
+      font-size: 1.6rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 1; }
+      10% { opacity: 0.8; }
+      20% { opacity: 0.5; }
+      30% { opacity: 0.8; }
+      100% { opacity: 1; }
+    }
+
+    .flicker {
+      animation: flicker 0.4s infinite;
+    }
+  </style>
+</head>
+<body>
+  <a id="delayed-link" href="index.html">
+    <img id="background" src="pov.png">
+  </a>
+
+  <div>
+    <p id="typewriter"></p>
+  </div>
+
+  <script>
+    const thoughts = [
+      "are you still here?",
+      "thanks for staying.",
+      "do you ever feel this way too?",
+      "...i thought i was the only one."
+    ];
+
+    const typewriterContainer = document.getElementById("typewriter");
+    let thoughtIndex = 0;
+    let charIndex = 0;
+    let currentLine = "";
+
+    function typeNextChar() {
+      const currentThought = thoughts[thoughtIndex];
+
+      if (charIndex < currentThought.length) {
+        currentLine += currentThought.charAt(charIndex);
+        typewriterContainer.lastChild.textContent = currentLine;
+        charIndex++;
+        setTimeout(typeNextChar, 120);
+      } else {
+        thoughtIndex++;
+        charIndex = 0;
+        currentLine = "";
+
+        if (thoughtIndex < thoughts.length) {
+          const nextP = document.createElement("p");
+          nextP.classList.add("flicker");
+          typewriterContainer.appendChild(nextP);
+
+          setTimeout(typeNextChar, 1000);
+        }
+      }
+    }
+
+    window.onload = () => {
+      const firstP = document.createElement("p");
+      firstP.classList.add("flicker");
+      typewriterContainer.appendChild(firstP);
+      setTimeout(typeNextChar, 800);
+    };
+
+    const link = document.getElementById("delayed-link");
+
+// Disable clicks initially
+link.style.pointerEvents = "none";
+link.style.opacity = "0.5"; // optional: make it look disabled
+
+// Re-enable after 10 seconds
+setTimeout(() => {
+  link.style.pointerEvents = "auto";
+  link.style.opacity = "1"; // optional: return to normal
+}, 20000);
+  </script>
+</body>
+</html>
