@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>woof</title>
+  <link rel="shorcut icon" href="icon.jpg">
+  <style>         
+    body {
+      top: 20vh;
+      left: 0vw;
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: black;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+      color: white;
+      padding: 40px;
+      position: fixed;
+    }
+
+    #background {
+        position: fixed;
+        object-fit: cover;
+        z-index: -2;
+        filter: invert(100%);
+        top: 0vh;
+        right: 0vw;
+        width: 45vw;
+  }
+
+    #typewriter {
+      font-size: 1.4rem;
+      line-height: 1.1;
+      white-space: pre-wrap;
+    }
+    
+  </style>
+</head>
+<body>
+  <a id="delayed-link" href="pov.html">
+    <img id="background" src="dog.png">
+  </a>  
+
+  <div>
+    <p id="typewriter"></p>
+  </div>
+
+  <script>
+    const thoughts = [
+      "oooooh puppy!!",
+      "so cute, hehe.",
+      "dogs are always so happy.",
+      "why am i so sad?",
+      "what is there to even be sad about?",
+      "",
+      "i wish i was a puppy.",
+      "i wouldn't care what other dogs thought of me,",
+      "or whether i've earned the right to just",
+      "be a dog.",
+      "i wouldn't be so sad.",
+      "i don't want to be sad anymore."
+    ];
+  
+    const typewriterContainer = document.getElementById("typewriter");
+    let thoughtIndex = 0;
+    let charIndex = 0;
+    let currentLine = "";
+  
+    function typeNextChar() {
+      const currentThought = thoughts[thoughtIndex];
+  
+      if (charIndex < currentThought.length) {
+        currentLine += currentThought.charAt(charIndex);
+        typewriterContainer.lastChild.textContent = currentLine;
+        charIndex++;
+        setTimeout(typeNextChar, 100);
+      } else {
+        thoughtIndex++;
+        charIndex = 0;
+        currentLine = "";
+  
+        if (thoughtIndex < thoughts.length) {
+          const nextP = document.createElement("p");
+          typewriterContainer.appendChild(nextP);
+  
+          const nextThought = thoughts[thoughtIndex];
+          const pauseDuration = (nextThought === "i was i was a puppy.") ? 2000 : 600;
+  
+          setTimeout(typeNextChar, pauseDuration);
+        }
+      }
+    }
+  
+    window.addEventListener("DOMContentLoaded", () => {
+  const firstP = document.createElement("p");
+  typewriterContainer.appendChild(firstP);
+  setTimeout(typeNextChar, 800);
+});
+
+
+    const link = document.getElementById("delayed-link");
+
+    link.style.pointerEvents = "none";
+link.style.opacity = "0.8";
+
+setTimeout(() => {
+  link.style.pointerEvents = "auto";
+  link.style.opacity = "1";
+}, 36000);
+
+  </script>
+</body>
+</html>
