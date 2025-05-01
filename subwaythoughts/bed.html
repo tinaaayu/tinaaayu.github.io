@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>please help</title>
+  <link rel="shorcut icon" href="icon.jpg">
+  <style>         
+    body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: black;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+      color: white;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      font-size: 0.6rem;
+      line-height: 1.5rem;
+      top: 15vh;
+      left: 60vw;
+    }
+
+    #background {
+      position: fixed;
+      object-fit: cover;
+      z-index: -2;
+      filter: invert(100%);
+      top: 25vh;
+      left: 20vw;
+      width: 30vw;
+    }
+
+    .typewriter {
+      position: absolute;
+      width: 100%;
+      color: white;
+    }
+
+    #typewriter1 {
+      top: 10%;
+      opacity: 1;
+    }
+
+    #typewriter2 {
+      top: 40%;
+      opacity: 0.7;
+    }
+
+    #typewriter3 {
+      top: 70%;
+      opacity: 0.4;
+    }
+
+    #typewriter-left {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <a id="delayed-link" href="mirror.html">
+    <img id="background" src="bed.png">
+  </a>
+
+  <div id="left">
+    <div class="typewriter" id="typewriter-left"></div>
+  </div>
+
+  <div class="typewriter" id="typewriter1"></div>
+  <div class="typewriter" id="typewriter2"></div>
+  <div class="typewriter" id="typewriter3"></div>
+
+  <script>
+    const thoughts = [
+      "i'm so tired.",
+      "but tired from what, exactly?",
+      "i haven’t even done anything.",
+      "not really.",
+      "not compared to everyone else.",
+      "i haven’t earned this exhaustion.",
+      "i haven’t done enough to deserve rest.",
+      "i'm just... lazy.",
+      "lazy. and average.",
+      "unremarkable.",
+      "ugly.",
+      "jealous.",
+      "dull.",
+      "too much. not enough."
+    ];
+
+    const leftContainer = document.getElementById("typewriter-left");
+    const containers = [document.getElementById("typewriter1"), document.getElementById("typewriter2"), document.getElementById("typewriter3")];
+
+    function typeNextChar(container, thoughtArray, index, charIndex, currentLine) {
+      const currentThought = thoughtArray[index];
+
+      if (charIndex < currentThought.length) {
+        currentLine += currentThought.charAt(charIndex);
+        if (!container.lastChild || container.lastChild.tagName !== "P") {
+          const newP = document.createElement("p");
+          container.appendChild(newP);
+        }
+        container.lastChild.textContent = currentLine;
+        charIndex++;
+        setTimeout(() => typeNextChar(container, thoughtArray, index, charIndex, currentLine), 20);
+      } else {
+        index++;
+        charIndex = 0;
+        currentLine = "";
+
+        if (index < thoughtArray.length) {
+          const nextP = document.createElement("p");
+          container.appendChild(nextP);
+          setTimeout(() => typeNextChar(container, thoughtArray, index, charIndex, currentLine), 500);
+        }
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      containers.forEach(container => {
+        container.innerHTML = "";
+        typeNextChar(container, thoughts, 0, 0, "");
+      });
+    });
+
+    const link = document.getElementById("delayed-link");
+
+link.style.pointerEvents = "none";
+link.style.opacity = "0.8";
+
+setTimeout(() => {
+  link.style.pointerEvents = "auto";
+  link.style.opacity = "1";
+}, 14000);
+  </script>
+</body>
+</html>
